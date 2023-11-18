@@ -90,25 +90,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   <xsl:variable name="data" select="document($osmfile)"/>
 
-  <!-- Use a web-service (if available) to get the current date -->
-  <xsl:variable name="now" select="document('http://xobjex.com/service/date.xsl')" />
-  <xsl:variable name="date">
-    <xsl:choose>
-      <xsl:when test="$now">
-        <xsl:value-of select="substring($now/date/utc/@stamp,1,10)" />
-        <!-- Assumes 4 digit year -->
-      </xsl:when>
-      <xsl:otherwise>2009-01-01</xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <xsl:variable name="year">
-    <xsl:choose>
-      <xsl:when test="$now">
-        <xsl:value-of select="$now/date/utc/year" />
-      </xsl:when>
-      <xsl:otherwise>2009</xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
+  <!-- Don't bother with date -->
+  <xsl:variable name="date"></xsl:variable>
+  <xsl:variable name="year"></xsl:variable>
 
   <!-- extra height for marginalia at top -->
   <xsl:variable name="marginaliaTopHeight">
