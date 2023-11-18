@@ -1231,20 +1231,6 @@
 		  </else>
 		</rule>
 
-		<!-- Buildings -->
-		<rule e="way" k="aeroway" v="terminal">
-			<area class="building-block"/>
-		</rule>
-		<rule e="way" k="building" v="*">
-			<area class="building-block no-bezier"/>
-		</rule>
-		<rule e="node" k="building" v="*">
-			<rule e="node" k="building" v="entrance"></rule>
-			<else>
-				<symbol ref="building" position="center"/>
-			</else>
-		</rule>
-
 		<!-- Linear cores -->
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
@@ -2175,12 +2161,7 @@
 					<symbol ref="power_hydro" position="center"/>
 				</rule>
 				<else>
-					<rule e="node" k="power_source" v="photovoltaic">
-						<symbol ref="power_photovoltaic" position="center"/>
-					</rule>
-					<else>
-						<symbol ref="power_generic" position="center"/>
-					</else>
+					<symbol ref="power_generic" position="center"/>
 				</else>
 			</else>
 		</rule>
@@ -2193,12 +2174,7 @@
 					<area class="power-hydro"/>
 				</rule>
 				<else>
-					<rule e="way" k="power_source" v="photovoltaic">
-						<area class="power-photovoltaic"/>
-					</rule>
-					<else>
-						<area class="power-generic"/>
-					</else>
+					<area class="power-generic"/>
 				</else>
 			</else>
 		</rule>
