@@ -2951,10 +2951,6 @@
 			<wayMarker k="highway" class="traffic-calming"/>
 		</rule>
 
-		<!-- Bus stops -->
-		<rule e="node|way" k="highway" v="bus_stop">
-			<symbol ref="bus" position="center"/>
-		</rule>
 		<!-- bus stations -->
 		<rule e="node|way" k="amenity" v="bus_station">
 			<symbol ref="bus_sta" position="center"/>
@@ -3389,17 +3385,6 @@
 				<rule e="way" k="highway" v="~">
 					<caption k="name" class="tourism-attraction-caption" layer="5"/>
 				</rule>
-			</rule>
-
-			<!-- platforms text -->
-			<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
-				<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
-			</rule>
-			<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
-				<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
-			</rule>
-			<rule e="node" k="highway|railway|public_transport" v="platform">
-				<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
 			</rule>
 
 			<rule e="node" k="railway" v="station" layer="5">

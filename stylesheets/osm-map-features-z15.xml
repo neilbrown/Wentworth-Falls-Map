@@ -410,14 +410,6 @@
 			</else>
 		</rule>
 
-		<!-- platforms casings -->
-		<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
-			<line class="highway-platform-area-casing" />
-		</rule>
-		<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
-			<line class="highway-platform-way-casing" />
-		</rule>
-
 		<!-- Highway area casings -->
 		<rule e="way" k="area" v="yes|true">
 
@@ -1061,14 +1053,6 @@
 			<rule e="node" s="way" k="highway" v="unclassified|residential|minor|road">
 				<circle r="2.5" class="highway-unclassified-turningcircle"/>
 			</rule>
-		</rule>
-
-		<!-- platforms cores -->
-		<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
-			<line class="highway-platform-area" />
-		</rule>
-		<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
-			<line class="highway-platform-way-core" />
 		</rule>
 
 		<!-- Highway area cores -->
@@ -2187,11 +2171,6 @@
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">
 			<line class="route-ferry"/>
-		</rule>
-
-		<!-- platforms nodes -->
-		<rule e="node" k="highway|railway|public_transport" v="platform">
-			<circle r="0.6px" class="highway-platform-node" />
 		</rule>
 
 		<!-- Railway stations -->
