@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exslt="http://exslt.org/common"
+  xmlns:math="http://exslt.org/math"
   xmlns:msxsl="urn:schemas-microsoft-com:xslt"
   xmlns:labels="http://openstreetmap.org/osmarender-labels-rtf"
   xmlns:z="http://openstreetmap.org/osmarender-z-rtf"
@@ -893,7 +894,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="pathDirection"/>
     <xsl:param name='text'/>
 
-    <xsl:variable name='pathLengthSquared'>
+    <xsl:variable name='pathLength'>
       <xsl:call-template name='getPathLength'>
         <xsl:with-param name='pathLengthMultiplier'>
           <!-- This factor is used to adjust the path-length for comparison with text along a path to determine whether it will fit. -->
@@ -912,13 +913,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:variable>
 
     <xsl:variable name='textLength' select='string-length($text)' />
-    <xsl:variable name='textLengthSquared100' select='($textLength)*($textLength)' />
-    <xsl:variable name='textLengthSquared90' select='($textLength *.9)*($textLength*.9)' />
-    <xsl:variable name='textLengthSquared80' select='($textLength *.8)*($textLength*.8)' />
-    <xsl:variable name='textLengthSquared70' select='($textLength *.7)*($textLength*.7)' />
+    <xsl:variable name='textLength100' select='($textLength)' />
+    <xsl:variable name='textLength90' select='($textLength *.9)' />
+    <xsl:variable name='textLength80' select='($textLength *.8)' />
+    <xsl:variable name='textLength70' select='($textLength *.7)' />
 
     <xsl:choose>
-      <xsl:when test='($pathLengthSquared) > $textLengthSquared100'>
+      <xsl:when test='($pathLength) > $textLength100'>
         <text>
           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
           <textPath xlink:href="#{$pathId}">
@@ -928,7 +929,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           </textPath>
         </text>
       </xsl:when>
-      <xsl:when test='($pathLengthSquared) > ($textLengthSquared90)'>
+      <xsl:when test='($pathLength) > ($textLength90)'>
         <text>
           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
           <textPath xlink:href="#{$pathId}">
@@ -939,7 +940,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           </textPath>
         </text>
       </xsl:when>
-      <xsl:when test='($pathLengthSquared) > ($textLengthSquared80)'>
+      <xsl:when test='($pathLength) > ($textLength80)'>
         <text>
           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
           <textPath xlink:href="#{$pathId}">
@@ -950,7 +951,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           </textPath>
         </text>
       </xsl:when>
-      <xsl:when test='($pathLengthSquared) > ($textLengthSquared70)'>
+      <xsl:when test='($pathLength) > ($textLength70)'>
         <text>
           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
           <textPath xlink:href="#{$pathId}">
@@ -968,9 +969,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 
   <xsl:template name='getPathLength'>
-    <xsl:param name='sumLon' select='number("0")' />
-    <!-- initialise sum to zero -->
-    <xsl:param name='sumLat' select='number("0")' />
+    <xsl:param name='sumLen' select='number("0")' />
     <!-- initialise sum to zero -->
     <xsl:param name='nodes'/>
     <xsl:param name='pathLengthMultiplier'/>
@@ -978,46 +977,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <xsl:when test='$nodes[1] and $nodes[2]'>
         <xsl:variable name='fromNode' select='key("nodeById",$nodes[1]/@ref)'/>
         <xsl:variable name='toNode' select='key("nodeById",$nodes[2]/@ref)'/>
-        <xsl:variable name='lengthLon' select='($fromNode/@lon)-($toNode/@lon)'/>
-        <xsl:variable name='absLengthLon'>
-          <xsl:choose>
-            <xsl:when test='$lengthLon &lt; 0'>
-              <xsl:value-of select='$lengthLon * -1'/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select='$lengthLon'/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name='lengthLat' select='($fromNode/@lat)-($toNode/@lat)'/>
-        <xsl:variable name='absLengthLat'>
-          <xsl:choose>
-            <xsl:when test='$lengthLat &lt; 0'>
-              <xsl:value-of select='$lengthLat * -1'/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select='$lengthLat'/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
+        <xsl:variable name='lengthLon' select='1000*$pathLengthMultiplier*(($fromNode/@lon)-($toNode/@lon))'/>
+        <xsl:variable name='lengthLat' select='$projection*1000*$pathLengthMultiplier*(($fromNode/@lat)-($toNode/@lat))'/>
         <xsl:call-template name='getPathLength'>
-          <xsl:with-param name='sumLon' select='$sumLon+$absLengthLon'/>
-          <xsl:with-param name='sumLat' select='$sumLat+$absLengthLat'/>
+          <xsl:with-param name='sumLen' select='$sumLen+math:sqrt($lengthLon*$lengthLon + $lengthLat*$lengthLat)'/>
           <xsl:with-param name='nodes' select='$nodes[position()!=1]'/>
           <xsl:with-param name='pathLengthMultiplier' select='$pathLengthMultiplier'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <!-- Add the square of the total horizontal length to the square of the total vertical length to get the square of
-				     the total way length.  We don't have a sqrt() function so leave it squared.
-				     Multiply by 1,000 so that we are usually dealing with a values greater than 1.  Squares of values between 0 and 1
-				     are smaller and so not very useful.
-				     Multiply the latitude component by $projection to adjust for Mercator projection issues.
-				     -->
-        <xsl:value-of select='(
-					(($sumLon*1000*$pathLengthMultiplier)*($sumLon*1000*$pathLengthMultiplier))+
-					(($sumLat*1000*$pathLengthMultiplier*$projection)*($sumLat*1000*$pathLengthMultiplier*$projection))
-					)'/>
+        <xsl:value-of select='$sumLen'/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
