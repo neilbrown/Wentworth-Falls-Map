@@ -69,6 +69,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:param name="symbolsDir" select="/rules/@symbolsDir"/>
 
   <xsl:param name="showGrid" select="/rules/@showGrid"/>
+  <xsl:param name="showAttrib" select="/rules/@showAttrib"/>
   <xsl:param name="showBorder" select="/rules/@showBorder"/>
   <xsl:param name="showScale" select="/rules/@showScale"/>
   <xsl:param name="showLicense" select="/rules/@showLicense"/>
@@ -433,6 +434,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <!-- Draw a grid if required -->
         <xsl:if test="$showGrid='yes'">
           <xsl:call-template name="drawGrid"/>
+        </xsl:if>
+
+        <!-- Draw a attribution if required -->
+        <xsl:if test="$showAttrib='yes'">
+          <xsl:call-template name="drawAttrib"/>
         </xsl:if>
 
         <!-- Draw a border if required -->
@@ -3817,6 +3823,22 @@ against infinite loops -->
       </xsl:call-template>
       <text id="grid-col-{$line}" y="{$step * 2 div 5}px" x="{($line - 1)*$step + $step * 3 div 5}px" class="map-grid-ref"><xsl:value-of select="$line"/></text>
     </xsl:if>
+  </xsl:template>
+
+  <!-- Draw Attribution -->
+  <xsl:template name="drawAttrib">
+    <g id="attrib" inkscape:groupmode="layer" inkscape:label="Attrib">
+      <xsl:variable name="xcnt" select="ceiling($documentWidth div $km)"/>
+      <xsl:variable name="xpos" select="$documentWidth div (2 * $xcnt) * (2 * $xcnt - 1)"/>
+      <xsl:variable name="xwidth" select="$documentWidth div $xcnt * 90 div 100"/>
+      <xsl:variable name="ycnt" select="ceiling($documentHeight div $km)"/>
+      <xsl:variable name="ypos" select="$documentHeight div (4 * $ycnt) * (4 * $ycnt - 1)"/>
+      <xsl:variable name="ystep" select="$km div 16"/>
+      <rect id="attribution-block" x="{$xpos - $xwidth div 2}" y="{$ypos - $ystep - $ystep div 2}" width="{$xwidth}" height="{$ystep * 4}" class="map-attribution-background"/>
+      <text id="attribution-1" x="{$xpos}" y="{$ypos}" font-weight="bold" class="map-attribution">Map Data from OpenStreetMap</text>
+      <text id="attribution-2" x="{$xpos}" y="{$ypos + $ystep}" class="map-attribution">Used by permission</text>
+      <text id="attribution-3" x="{$xpos}" y="{$ypos + 2 * $ystep}" class="map-attribution-url">openstreetmap.org/copyright</text>
+    </g>
   </xsl:template>
 
 
