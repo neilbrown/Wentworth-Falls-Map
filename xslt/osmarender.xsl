@@ -3777,14 +3777,16 @@ against infinite loops -->
   </xsl:template>
 
 
-  <!-- Draw a grid over the map in 1km increments -->
+  <!-- Draw a grid over the map in 1km or less increments -->
   <xsl:template name="drawGrid">
     <g id="grid" inkscape:groupmode="layer" inkscape:label="Grid">
       <xsl:call-template name="drawGridHorizontals">
         <xsl:with-param name="line" select="'1'"/>
+	<xsl:with-param name="step" select="$documentHeight div ceiling($documentHeight div $km)"/>
       </xsl:call-template>
       <xsl:call-template name="drawGridVerticals">
         <xsl:with-param name="line" select="'1'"/>
+	<xsl:with-param name="step" select="$documentWidth div ceiling($documentWidth div $km)"/>
       </xsl:call-template>
     </g>
   </xsl:template>
@@ -3792,22 +3794,28 @@ against infinite loops -->
 
   <xsl:template name="drawGridHorizontals">
     <xsl:param name="line"/>
-    <xsl:if test="($line*$km) &lt; $documentHeight">
-      <line id="grid-hori-{$line}" x1="0px" y1="{$line*$km}px" x2="{$documentWidth}px" y2="{$line*$km}px" class="map-grid-line"/>
+    <xsl:param name="step"/>
+    <xsl:if test="($line*$step) &lt;= $documentHeight">
+      <line id="grid-hori-{$line}" x1="0px" y1="{$line*$step}px" x2="{$documentWidth}px" y2="{$line*$step}px" class="map-grid-line"/>
       <xsl:call-template name="drawGridHorizontals">
         <xsl:with-param name="line" select="$line+1"/>
+        <xsl:with-param name="step" select="$step"/>
       </xsl:call-template>
+      <text id="grid-row-{$line}" x="{$step * 1 div 5}px" y="{($line - 1)*$step + $step * 4 div 5}px" class="map-grid-ref"><xsl:value-of select="substring('ABCDEFGHIJKLMNOPQRSTUVWAYZ', $line, 1)"/></text>
     </xsl:if>
   </xsl:template>
 
 
   <xsl:template name="drawGridVerticals">
     <xsl:param name="line"/>
-    <xsl:if test="($line*$km) &lt; $documentWidth">
-      <line id="grid-vert-{$line}" x1="{$line*$km}px" y1="0px" x2="{$line*$km}px" y2="{$documentHeight}px" class="map-grid-line"/>
+    <xsl:param name="step"/>
+    <xsl:if test="($line*$step) &lt;= $documentWidth">
+      <line id="grid-vert-{$line}" x1="{$line*$step}px" y1="0px" x2="{$line*$step}px" y2="{$documentHeight}px" class="map-grid-line"/>
       <xsl:call-template name="drawGridVerticals">
         <xsl:with-param name="line" select="$line+1"/>
+        <xsl:with-param name="step" select="$step"/>
       </xsl:call-template>
+      <text id="grid-col-{$line}" y="{$step * 2 div 5}px" x="{($line - 1)*$step + $step * 3 div 5}px" class="map-grid-ref"><xsl:value-of select="$line"/></text>
     </xsl:if>
   </xsl:template>
 
