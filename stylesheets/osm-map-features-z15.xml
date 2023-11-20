@@ -2354,29 +2354,6 @@
 			</rule>
 
 
-			<!-- Road numbers for all highways -->
-			<rule e="way" k="osmarender:renderRef" v="~|yes" layer="5">
-				<rule e="way" k="tunnel" v="~|no|false" layer="5"> <!-- no road numbers in tunnels -->
-					<rule e="way" k="junction" v="~" layer="5"> <!-- no ref on junctions / roundabouts -->
-						<!-- Use startOffset to prevent captions from colliding on dual carriageways -->
-						<rule e="way" k="highway" v="tertiary" layer="5">
-							<pathText k="ref" startOffset="30%" class="highway-ref highway-tertiary-ref" dy="-3.5px" textAttenuation="1.5" layer="5" avoid-duplicates="true" />
-						</rule>
-						<rule e="way" k="highway" v="secondary" layer="5">
-							<pathText k="ref" startOffset="30%" class="highway-ref highway-secondary-ref" dy="-3.5px" textAttenuation="1.5" layer="5" avoid-duplicates="true" />
-						</rule>
-						<rule e="way" k="highway" v="primary" layer="5">
-							<pathText k="ref" startOffset="30%" class="highway-ref highway-primary-ref" dy="-3.5px" textAttenuation="1.5" layer="5" avoid-duplicates="true" />
-						</rule>
-						<rule e="way" k="highway" v="trunk" layer="5">
-							<pathText k="ref" startOffset="30%" class="highway-ref highway-trunk-ref" dy="-3.5px" textAttenuation="1.5" layer="5" avoid-duplicates="true" />
-						</rule>
-						<rule e="way" k="highway" v="motorway" layer="5">
-							<pathText k="ref" startOffset="30%" class="highway-ref highway-motorway-ref" dy="-4px" textAttenuation="1.5" layer="5" avoid-duplicates="true" />
-						</rule>
-					</rule>
-				</rule>
-			</rule>
 		</rule>
 
 		<!-- Place names  -->
