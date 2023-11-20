@@ -392,7 +392,6 @@
 		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">
 			<area class="leisure-nature_reserve"/>
-			<symbol ref="bird" position="center"/>
 		</rule>
 
 		<rule e="way" k="highway" v="*">
