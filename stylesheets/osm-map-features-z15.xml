@@ -2126,48 +2126,6 @@
 			<line class="artificial-pier-core"/>
 		</rule>
 
-		<!-- Power lines and pylons -->
-		<rule e="way" k="power" v="line">
-			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-			<line class="power-line no-bezier" smart-linecap="no"/>
-		</rule>
-		<rule e="node|way" k="power" v="tower">
-			<symbol ref="power-tower" position="center"/>
-		</rule>
-
-		<!-- Power generators -->
-		<rule e="node" k="power" v="generator">
-			<rule e="node" k="power_source" v="wind">
-				<symbol ref="power_wind" position="center"/>
-			</rule>
-			<else>
-				<rule e="node" k="power_source" v="hydro">
-					<symbol ref="power_hydro" position="center"/>
-				</rule>
-				<else>
-					<symbol ref="power_generic" position="center"/>
-				</else>
-			</else>
-		</rule>
-		<rule e="way" k="power" v="generator">
-			<rule e="way" k="power_source" v="wind">
-				<area class="power-wind"/>
-			</rule>
-			<else>
-				<rule e="way" k="power_source" v="hydro">
-					<area class="power-hydro"/>
-				</rule>
-				<else>
-					<area class="power-generic"/>
-				</else>
-			</else>
-		</rule>
-
-		<!-- Electrical substations -->
-		<rule e="way" k="power" v="station|sub_station">
-			<area class="power-generic"/>
-		</rule>
-
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">
 			<line class="route-ferry"/>
