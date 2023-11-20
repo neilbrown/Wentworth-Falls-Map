@@ -4083,7 +4083,7 @@
 
 			<!-- map background must be the same for all zooms or else empty tile detection will fail -->
 			.map-background {
-			fill: #f8f8f8;
+			fill: #d4ebcb;
 			stroke: none;
 			}
 
