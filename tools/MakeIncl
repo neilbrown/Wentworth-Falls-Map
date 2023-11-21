@@ -1,0 +1,17 @@
+
+../downloads/% :
+	mkdir -p ../downloads
+	wget -O $@ http://download.openstreetmap.fr/extracts/$$(echo $* | tr '-' '/')
+
+%.svg : ../stylesheets/osm-map-features-z15.xml ../stylesheets/osm-map-features-z16.xml
+	scale=$$(echo $* | sed -e 's/^.*[^0-9]\([0-9]*\)$$/\1/') ;\
+	xmlstarlet tr ../xslt/osmarender.xsl -s osmfile=$${PWD}/$(filter %.osm,$^) ../stylesheets/osm-map-features-z$${scale}.xml > $@
+%.pdf : %.svg
+	inkscape --export-filename $@ $^
+
+CLEAN= --clean=version --clean=timestamp --clean=changeset --clean=uid --clean=user
+
+data-%.osm :
+	osmium extract --set-bounds $(CLEAN) --polygon $(filter %.poly,$^) $(filter %.pbf, $^) -o $@
+
+.DELETE_ON_ERROR:
