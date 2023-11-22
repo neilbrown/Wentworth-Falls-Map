@@ -8,6 +8,8 @@
 	xmlstarlet tr ../xslt/osmarender.xsl -s osmfile=$${PWD}/$(filter %.osm,$^) ../stylesheets/osm-map-features-z$${scale}.xml > $@
 %.pdf : %.svg
 	inkscape --export-filename $@ $^
+%.png : %.svg
+	inkscape --export-filename $@ -d 1200 $^
 
 CLEAN= --clean=version --clean=timestamp --clean=changeset --clean=uid --clean=user
 
