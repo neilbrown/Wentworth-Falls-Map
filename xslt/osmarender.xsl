@@ -1420,9 +1420,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 				</xsl:call-template>
 			</xsl:variable>
 
-			<xsl:message>
-				areaCenter for <xsl:value-of select="@id" /> at: <xsl:value-of select="$center" />
-			</xsl:message>
+			<xsl:message>areaCenter for <xsl:value-of select="@id" /> at: <xsl:value-of select="$center" /></xsl:message>
 
 			<xsl:call-template name="renderText">
 				<xsl:with-param name="instruction" select="$instruction"/>
@@ -1498,9 +1496,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 				</xsl:call-template>
 			</xsl:variable>
 
-			<xsl:message>
-				areaCenter for <xsl:value-of select="@id" /> at: <xsl:value-of select="$center" />
-			</xsl:message>
+			<xsl:message>areaCenter for <xsl:value-of select="@id" /> at: <xsl:value-of select="$center" /></xsl:message>
 
 			<xsl:call-template name="renderSymbol">
 				<xsl:with-param name="instruction" select="$instruction"/>
@@ -1522,9 +1518,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <xsl:choose>
       <xsl:when test="$element/tag[@k='osmarender:areaCenterLat']">
-        <xsl:message>
-          <xsl:value-of select="$element/tag[@k='osmarender:areaCenterLat']"/>
-        </xsl:message>
+        <xsl:message><xsl:value-of select="$element/tag[@k='osmarender:areaCenterLat']"/></xsl:message>
         <xsl:value-of select="concat($element/tag[@k='osmarender:areaCenterLon']/@v,',',$element/tag[@k='osmarender:areaCenterLat']/@v)"/>
       </xsl:when>
       <xsl:when test="count($element/nd) &gt; 2 and count($element/nd) &lt; 150">
@@ -2705,9 +2699,7 @@ against infinite loops -->
 	     Draw area only once, draw the outer one first if we know which is it, else just draw the first one -->
 	<xsl:variable name='outerway' select="$relation/member[@type='way'][@role='outer']/@ref"/>
         <xsl:if test='( $outerway and $outerway=@id)'>
-          <xsl:message>
-            <xsl:value-of select='$relation/@id'/>
-          </xsl:message>
+          <xsl:message><xsl:value-of select='$relation/@id'/></xsl:message>
           <xsl:for-each select="$relation/member[@type='way'][key('wayById', @ref)]">
             <xsl:call-template name='generateAreaSubPath'>
               <xsl:with-param name='way' select="key('wayById',@ref)"/>
@@ -2729,12 +2721,7 @@ against infinite loops -->
     <xsl:param name='way'/>
 
     <xsl:variable name='loop' select='$way/nd[1]/@ref=$way/nd[last()]/@ref'/>
-    <xsl:message>
-      WayId: <xsl:value-of select='$way/@id'/>
-      Loop: <xsl:value-of select='$loop'/>
-      Loop: <xsl:value-of select='$way/nd[1]/@ref'/>
-      Loop: <xsl:value-of select='$way/nd[last()]/@ref'/>
-    </xsl:message>
+    <xsl:message>WayId: <xsl:value-of select='$way/@id'/>  Loop: <xsl:value-of select='$loop'/>, <xsl:value-of select='$way/nd[1]/@ref'/>, <xsl:value-of select='$way/nd[last()]/@ref'/></xsl:message>
 
 	<xsl:for-each select="$data">
 
@@ -3512,9 +3499,7 @@ against infinite loops -->
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:message>
-            Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt;
-          </xsl:message>
+          <xsl:message>Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt;</xsl:message>
 
           <xsl:apply-templates select="*">
             <xsl:with-param name="elements" select="$elements"/>
@@ -3579,10 +3564,7 @@ against infinite loops -->
     <!-- Convert nearbyElements rtf to a node-set -->
     <xsl:variable name="nearbyElements" select="exslt:node-set($nearbyElementsRtf)/*"/>
 
-    <xsl:message>
-      Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"
-      horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;
-    </xsl:message>
+    <xsl:message>Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"  horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;</xsl:message>
 
     <xsl:call-template name="processElements">
       <xsl:with-param name="eBare" select="$eBare"/>
@@ -3708,9 +3690,7 @@ against infinite loops -->
             T Latitude difference N Longitude difference t absolute Latitude The formula interpolates a cosine function with +10% error at the poles/equator and -10% error in the north Italy.
         -->
         <xsl:variable name="size" select="$latDiff + ($lonDiff * (1.05 - (($maxLat - 5) div 90)))" />
-        <xsl:message>
-          <xsl:value-of select="@id" /> size = <xsl:value-of select="$size" />
-        </xsl:message>
+        <xsl:message><xsl:value-of select="@id" /> size = <xsl:value-of select="$size" /></xsl:message>
 
         <xsl:if test="$size &gt; $rule/@minSize">
           <xsl:copy-of select="." />
@@ -3735,9 +3715,7 @@ against infinite loops -->
     <xsl:param name="layer"/>
     <xsl:param name="rule"/>
 
-    <xsl:message>
-      Processing SVG layer: <xsl:value-of select="@name"/> (at OSM layer <xsl:value-of select="$layer"/>)
-    </xsl:message>
+    <xsl:message>Processing SVG layer: <xsl:value-of select="@name"/> (at OSM layer <xsl:value-of select="$layer"/>)</xsl:message>
 
     <xsl:variable name="opacity">
       <xsl:if test="@opacity">
