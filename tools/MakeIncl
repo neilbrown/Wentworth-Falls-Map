@@ -14,6 +14,7 @@
 CLEAN= --clean=version --clean=timestamp --clean=changeset --clean=uid --clean=user
 
 data-%.osm :
+	rm -f $@
 	osmium extract --set-bounds $(CLEAN) --polygon $(filter %.poly,$^) $(filter %.pbf, $^) -o $@
 
 .DELETE_ON_ERROR:
