@@ -5,6 +5,22 @@ osm=$1
 {
 sed '/^<.osm>$/d' $osm
 gawk '
+	function abbrev_way(name)
+	{
+		sub(/Avenue$/,"Ave", name)
+		sub(/Circle$/,"Cir", name)
+		sub(/Close$/, "Cl", name)
+		sub(/Crescent$/, "Cr", name)
+		sub(/Drive$/, "Dr", name)
+		sub(/Grove$/, "Gr", name)
+		sub(/Highway$/, "Hwy", name)
+		sub(/Lane$/, "Ln", name)
+		sub(/Parade$/, "Pde", name)
+		sub(/Place$/, "Pl", name)
+		sub(/Road$/, "Rd", name)
+		sub(/Street$/, "St", name)
+		return name
+	}
 	BEGIN {
 		prio["trunk"] = 1
 		prio["secondary"] = 3
@@ -37,6 +53,9 @@ gawk '
 		if (!n || ! h || !fr)
 			#nothing here...
 			next;
+
+		if (! (n in alias))
+			alias[n] = abbrev_way(n)
 
 		# See if we can add an existing way
 		for (id2 in ways[n]) {
@@ -113,7 +132,7 @@ gawk '
 				}
 				printf "  <tag k=\"highway\" v=\"%s_name\"/>\n", hwyof[n];
 
-				printf "  <tag k=\"name\" v=\"%s\"/>\n", n
+				printf "  <tag k=\"name\" v=\"%s\"/>\n", alias[n]
 				printf "</way>\n"
 			}
 		}
