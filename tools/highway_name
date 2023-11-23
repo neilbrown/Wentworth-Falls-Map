@@ -53,7 +53,10 @@ gawk '
 		prio["service"] = 6
 		prio["track"] = 7
 		prio["unclassified"] = 8
+		# These are hidden
 		prio["proposed"] = 99
+		prio["trunk_link"] = 99
+		prio["secondary_link"] = 99
 	}
 
 	$1 == "<node" && $3 ~ /lat=/ {
@@ -77,6 +80,8 @@ gawk '
 
 		if (!n || ! h || !fr)
 			#nothing here...
+			next;
+		if (prio[h] == 99)
 			next;
 
 		if (! (n in alias))
