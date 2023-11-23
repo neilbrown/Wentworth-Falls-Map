@@ -2855,19 +2855,19 @@
 						</rule>
 
 						<!-- Highway names -->
-						<rule e="way" k="highway" v="steps" layer="5">
+						<rule e="way" k="highway" v="steps_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-steps-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="footway|footpath" layer="5">
+						<rule e="way" k="highway" v="footway_name|footpath_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="pedestrian" layer="5">
+						<rule e="way" k="highway" v="pedestrian_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-pedestrian-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="cycleway" layer="5">
+						<rule e="way" k="highway" v="cycleway_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="path" layer="5">
+						<rule e="way" k="highway" v="path_name" layer="5">
 							<rule e="way" k="bicycle" v="yes|designated" layer="5">
 								<pathText k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px" layer="5" avoid-duplicates="true" />
 							</rule>
@@ -2879,52 +2879,52 @@
 									<pathText k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.35px" layer="5" avoid-duplicates="true" />
 								</else></else>
 						</rule>
-						<rule e="way" k="highway" v="bridleway" layer="5">
+						<rule e="way" k="highway" v="bridleway_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="byway" layer="5">
+						<rule e="way" k="highway" v="byway_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-byway-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="track" layer="5">
+						<rule e="way" k="highway" v="track_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-track-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="unsurfaced" layer="5">
+						<rule e="way" k="highway" v="unsurfaced_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-unsurfaced-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="service" layer="5">
+						<rule e="way" k="highway" v="service_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-service-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road" layer="5">
+						<rule e="way" k="highway" v="unclassified_name|residential_name|minor_name|living_street_name|cycleroad_name|road_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="tertiary_link" layer="5">
+						<rule e="way" k="highway" v="tertiary_link_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-tertiary-link-name" dy="1px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="tertiary" layer="5">
+						<rule e="way" k="highway" v="tertiary_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-tertiary-name" dy="1px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="secondary_link" layer="5">
+						<rule e="way" k="highway" v="secondary_link_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-secondary-link-name" dy="1px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="secondary" layer="5">
+						<rule e="way" k="highway" v="secondary_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="1px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="primary_link" layer="5">
+						<rule e="way" k="highway" v="primary_link_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-primary-link-name" dy="1px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="trunk_link" layer="5">
+						<rule e="way" k="highway" v="trunk_link_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-trunk-link-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="motorway_link" layer="5">
+						<rule e="way" k="highway" v="motorway_link_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-motorway-link-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="primary" layer="5">
+						<rule e="way" k="highway" v="primary_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-primary-name" dy="1px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="trunk" layer="5">
+						<rule e="way" k="highway" v="trunk_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-trunk-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="motorway" layer="5">
+						<rule e="way" k="highway" v="motorway_name" layer="5">
 							<pathText k="name" startOffset="50%" class="highway-name highway-motorway-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
 					</rule>

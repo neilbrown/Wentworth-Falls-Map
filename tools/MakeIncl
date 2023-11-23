@@ -17,4 +17,7 @@ data-%.osm :
 	rm -f $@
 	osmium extract --set-bounds $(CLEAN) --polygon $(filter %.poly,$^) $(filter %.pbf, $^) -o $@
 
+data-%-filtered.osm : data-%.osm  ../tools/highway_name
+	bash ../tools/highway_name $(filter %.osm,$^) > $@
+
 .DELETE_ON_ERROR:
