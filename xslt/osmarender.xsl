@@ -968,8 +968,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           </textPath>
         </text>
       </xsl:when>
-      <xsl:otherwise />
-      <!-- Otherwise don't render the text -->
+      <xsl:otherwise>
+      <!-- Otherwise don't render the text, just report failure -->
+      <xsl:message>Cannot draw name for <xsl:value-of select="$text"/> Path <xsl:value-of select="$pathLength"/> Text <xsl:value-of select="$textLength"/> id <xsl:value-of select="$pathId"/></xsl:message>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
