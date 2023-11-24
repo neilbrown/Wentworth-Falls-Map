@@ -19,6 +19,10 @@ gawk '
 		sub(/Place$/, "Pl", name)
 		sub(/Road$/, "Rd", name)
 		sub(/Street$/, "St", name)
+		sub(/Circuit$/, "Cct", name)
+		sub(/Arcade$/, "Arc", name)
+		sub(/Track$/, "Trk", name)
+		sub(/Plaza$/, "Plz", name)
 		return name
 	}
 
@@ -180,9 +184,6 @@ gawk '
 		if (prio[h] == 99)
 			next;
 
-		if (! (n in alias))
-			alias[n] = abbrev_way(n)
-
 		for (i in refs)
 			idrefs[id][i] = refs[i];
 
@@ -210,7 +211,10 @@ gawk '
 
 			for (id in ways[n]) {
 				wlen = calc_way_len(id)
-				if (wlen <= 0.70 * length(alias[n])) {
+				alias = n
+				if (wlen < length(alias))
+					alias = abbrev_way(alias)
+				if (wlen <= 0.70 * length(alias)) {
 					# This name will not fit.  First see if there is a longer
 					# path that shares a point.  If so, do not bother
 					found = 0
@@ -226,7 +230,29 @@ gawk '
 					}
 					if (found)
 						continue
-					printf "Len %s %s is %f\n", n, id, calc_way_len(id) > "/dev/stderr"
+					split(alias, awords)
+					if (wlen > 4 && length(awords) > 1) {
+						# Try to abbreviate.
+						t = awords[length(awords)]
+						l = length(alias) - length(t) + 1
+						awords[length(awords)] = substr(t, 1, 1)
+						mn = (l - (wlen/0.75)) / (length(awords)-1)
+						mr = (l - (wlen/0.75)) - (mn * (length(awords)-1))
+						# need to remove mn from all and 1 more from mr
+						na = ""
+						for (i = 1; i <= length(awords)-1; i++) {
+							awords[i] = substr(awords[i], 1, length(awords[i])-mn)
+							if (i <= mr)
+								awords[i] = substr(awords[i], 1, length(awords[i])-1)
+							na = na  awords[i] " "
+						}
+						na = na awords[length(awords)]
+						alias = na
+						printf "Shortened %s to %s\n", n, alias > "/dev/stderr"
+					} else {
+						printf "Len %s %s is %f\n", alias, id, calc_way_len(id) > "/dev/stderr"
+						continue
+					}
 				}
 				printf "<way id=\"A%s\">\n", id;
 				for (i in idrefs[id]) {
@@ -237,7 +263,7 @@ gawk '
 				else
 					printf "  <tag k=\"highway\" v=\"%s_name\"/>\n", hwyof[n];
 
-				printf "  <tag k=\"name\" v=\"%s\"/>\n", alias[n]
+				printf "  <tag k=\"name\" v=\"%s\"/>\n", alias
 				printf "</way>\n"
 			}
 		}
