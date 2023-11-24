@@ -113,6 +113,30 @@ gawk '
 			}
 		}
 	}
+
+	function calc_way_len(id,    len, i, p0, p1, lt, ln)
+	{
+		len = 0
+		p0 = idrefs[id][0]
+		for (i = 1; i < length(idrefs[id]); i++) {	
+			p1 = idrefs[id][i]
+			lt = projection * 1000 * attenuation * (lat[p1] - lat[p0])
+			ln = 1000 * attenuation * (lon[p1] - lon[p0])
+			len += sqrt(lt*lt + ln*ln)
+			p0 = p1
+		}
+		return len
+	}
+
+	function shares_point(p1, p2,    i, j)
+	{
+		for (i = 0; i < length(p1); i++)
+			for (j = 0 ; j < length(p2); j++)
+				if (p1[i] == p2[j])
+					return 1
+		return 0
+	}
+
 	BEGIN {
 		prio["trunk"] = 1
 		prio["secondary"] = 3
@@ -125,6 +149,10 @@ gawk '
 		prio["proposed"] = 99
 		prio["trunk_link"] = 99
 		prio["secondary_link"] = 99
+
+		attenuation = 7
+		# projection is 1/cos(latitude)
+		projection = 1 / cos(-33.7 * 3.1415926 / 180.0)
 	}
 
 	$1 == "<node" && $3 ~ /lat=/ {
@@ -181,6 +209,25 @@ gawk '
 			join_ways(ways[n], 1)
 
 			for (id in ways[n]) {
+				wlen = calc_way_len(id)
+				if (wlen <= 0.70 * length(alias[n])) {
+					# This name will not fit.  First see if there is a longer
+					# path that shares a point.  If so, do not bother
+					found = 0
+					for (id2 in ways[n]) {
+						if (id == id2)
+							continue
+						if (calc_way_len(id2) < wlen)
+							continue
+						if (shares_point(idrefs[id], idrefs[id2])) {
+							found = 1
+							break
+						}
+					}
+					if (found)
+						continue
+					printf "Len %s %s is %f\n", n, id, calc_way_len(id) > "/dev/stderr"
+				}
 				printf "<way id=\"A%s\">\n", id;
 				for (i in idrefs[id]) {
 					printf "  <nd ref=\"%s\"/>\n", idrefs[id][i]
