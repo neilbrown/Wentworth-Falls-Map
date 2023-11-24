@@ -169,6 +169,7 @@ gawk '
 	inway { split($0, wd, /"/) }
 	inway && wd[2] == "name" { name = wd[4] }
 	inway && wd[2] == "highway" { hwy = wd[4] }
+	inway && wd[2] == "waterway" { hwy = "WATER" wd[4] }
 
 	inway && wd[1] ~ "<nd ref=" { refs[length(refs)] = wd[2]; lastref=wd[2]; if (!firstref) firstref=wd[2]; }
 
@@ -184,7 +185,10 @@ gawk '
 				for (i in idrefs[id]) {
 					printf "  <nd ref=\"%s\"/>\n", idrefs[id][i]
 				}
-				printf "  <tag k=\"highway\" v=\"%s_name\"/>\n", hwyof[n];
+				if (substr(hwyof[n], 1, 5) == "WATER")
+					printf "  <tag k=\"waterway\" v=\"%s_name\"/>\n", substr(hwyof[n], 6);
+				else
+					printf "  <tag k=\"highway\" v=\"%s_name\"/>\n", hwyof[n];
 
 				printf "  <tag k=\"name\" v=\"%s\"/>\n", alias[n]
 				printf "</way>\n"
