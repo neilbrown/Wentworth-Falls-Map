@@ -27,13 +27,26 @@ gawk '
 		if (a < 0) return -a
 		return a
 	}
-	function sameref(r1, r2, r1a, r2a)
+
+	function reverse(w, new,      i, l)
 	{
-		# r1 and r2 must be the same
-		# or they must be close and roughly between
-		# r1a and r2a
-		if (r1 == r2)
+		split("", new)
+		l = length(w)
+		for (i = 0; i < l ; i++)
+			new[l-i-1] = w[i]
+	}
+
+	function canjoin(w1, w2, approx)
+	{
+		if (w1[length(w1)-1] == w2[0])
 			return 1
+		if (!approx)
+			return 0
+
+		r1a = w1[0]
+		r1 = w1[length(w1)-1]
+		r2 = w2[0]
+		r2a = w2[length(w2)-1]
 		if (abs(lon[r1]-lon[r2]) > 0.0006 ||
 		    abs(lat[r1]-lat[r2]) > 0.0006)
 			return 0
@@ -44,6 +57,61 @@ gawk '
 		     (lon[r1a] >= lon[r1] && lon[r2] >= lon[r2a])))
 			return 1
 		return 0
+	}
+	function dojoin_after(w1, w2,    i, l)
+	{
+		l = length(w1)
+		for (i = 0; i < length(w2); i++)
+			w1[l+i] = w2[i]
+	}
+
+	function dojoin_before(w1, w2,    i, l, l2)
+	{
+		# insert w1 before w2 - shifting w2 up
+		l = length(w1)
+		l2 = length(w2)
+		for (i = l2; i > 0 ; i--)
+			w2[l+i-1] = w2[i-1]
+		for (i = 0; i < l; i++)
+			w2[i] = w1[i]
+	}
+
+	function join2ways(ways, w1, w2, w1f, w2f, approx,    w1r, w2r)
+	{
+		if (w1 == w2)
+			return 0
+		reverse(w1f, w1r)
+		reverse(w2f, w2r)
+
+		if (canjoin(w1f,w2f, approx))
+			dojoin_after(w1f,w2f)
+		else if (canjoin(w1f,w2r, approx))
+			dojoin_after(w1f, w2r)
+		else if (canjoin(w1r,w2f, approx))
+			dojoin_before(w2r, w1f)
+		else if (canjoin(w1r, w2r, approx))
+			dojoin_before(w2f, w1f)
+		else
+			return 0
+		delete idrefs[w2]
+		delete ways[w2]
+		return 1
+	}
+	function join_ways(ways, approx)
+	{
+		retry = 1
+		while (length(ways) > 1 && retry) {
+			retry = 0
+			for (id in ways) {
+				for (id2 in ways) {
+					if (join2ways(ways, id, id2, idrefs[id], idrefs[id2], approx)) {
+						retry = 1
+						break
+					}
+				}
+				if (retry) break
+			}
+		}
 	}
 	BEGIN {
 		prio["trunk"] = 1
@@ -64,7 +132,7 @@ gawk '
 		lon[ll[2]] = ll[6];
 		lat[ll[2]] = ll[4];
 	}
-	$1 == "<way" {inway = 1; delete(refs); hwy="";
+	$1 == "<way" {inway = 1; delete refs; hwy="";
 		split($2, ids, /"/); id=ids[2];
 		}
 	$1 == "</way>" {
@@ -87,55 +155,6 @@ gawk '
 		if (! (n in alias))
 			alias[n] = abbrev_way(n)
 
-		# See if we can add an existing way
-		for (id2 in ways[n]) {
-			delete r
-			for (i in idrefs[id2])
-				r[i] = idrefs[id2][i]
-			if (sameref(fr,r[0], lr, r[length(r)-1])) {
-				delete(rn);
-				for (i = length(refs); i > 0; i--) {
-					rn[length(rn)] = refs[i-1];
-				}
-				for (i = 1 ; i < length(r); i++) {
-					rn[length(rn)] = r[i];
-				}
-				delete refs
-				for (i in rn) refs[i] = rn[i]
-				delete idrefs[id2];
-				delete ways[n][id2]
-				fr = refs[0]
-				lr = refs[length(refs)-1]
-			} else if (sameref(fr, r[length(r)-1], lr, r[0])) {
-				for (i = 1 ; i < length(refs); i++) {
-					r[length(r)] = refs[i];
-				}
-				delete refs
-				for (i in r) refs[i] = r[i]
-				delete idrefs[id2]
-				delete ways[n][id2]
-				fr = refs[0]
-				lr = refs[length(refs)-1]
-			} else if (sameref(lr, r[0], fr, r[length(r)-1])) {
-				for (i = 1 ; i < length(r); i++) {
-					refs[length(refs)] = r[i];
-				}
-				delete idrefs[id2]
-				delete ways[n][id2]
-				fr = refs[0]
-				lr = refs[length(refs)-1]
-			} else if (sameref(lr, r[length(r)-1], fr, r[0])) {
-				for (i = length(r)-1 ; i > 0; i--) {
-					refs[length(refs)] = r[i-1];
-				}
-				delete idrefs[id2]
-				delete ways[n][id2]
-				fr = refs[0]
-				lastref = refs[length(refs)-1]
-			}
-		}
-
-		# refs has been extended if possible
 		for (i in refs)
 			idrefs[id][i] = refs[i];
 
@@ -155,6 +174,11 @@ gawk '
 
 	END {
 		for (n in ways) {
+			# attempt to join adjoining ways
+			join_ways(ways[n], 0)
+			# now try adjacent ways
+			join_ways(ways[n], 1)
+
 			for (id in ways[n]) {
 				printf "<way id=\"A%s\">\n", id;
 				for (i in idrefs[id]) {
