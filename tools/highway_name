@@ -65,6 +65,8 @@ gawk '
 	function dojoin_after(w1, w2,    i, l)
 	{
 		l = length(w1)
+		if (w1[l-1] == w2[0])
+			l -= 1
 		for (i = 0; i < length(w2); i++)
 			w1[l+i] = w2[i]
 	}
@@ -73,6 +75,8 @@ gawk '
 	{
 		# insert w1 before w2 - shifting w2 up
 		l = length(w1)
+		if (w1[l-1] == w2[0])
+			l -= 1
 		l2 = length(w2)
 		for (i = l2; i > 0 ; i--)
 			w2[l+i-1] = w2[i-1]
