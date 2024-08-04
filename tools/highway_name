@@ -315,10 +315,9 @@ gawk '
 						print "extended", alias, wlen > "/dev/stderr"
 						wlen = wlen * target
 						print "  to", wlen > "/dev/stderr"
-						continue;
 					}
 					split(alias, awords)
-					if (wlen > 4 && length(awords) > 1) {
+					if (wlen > 4 && wlen < 0.7 * length(alias) && length(awords) > 1) {
 						# Try to abbreviate.
 						t = awords[length(awords)]
 						l = length(alias) - length(t) + 1
@@ -336,10 +335,8 @@ gawk '
 						na = na awords[length(awords)]
 						alias = na
 						printf "Shortened %s to %s\n", n, alias > "/dev/stderr"
-					} else {
-						printf "Len %s %s is %f\n", alias, id, calc_way_len(id) > "/dev/stderr"
-						continue
 					}
+					printf "Len %s %s is %f\n", alias, id, calc_way_len(id) > "/dev/stderr"
 				}
 				printf "<way id=\"A%s\">\n", id;
 				for (i in idrefs[id]) {
