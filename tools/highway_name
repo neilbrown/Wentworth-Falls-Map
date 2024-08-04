@@ -221,6 +221,14 @@ gawk '
 		attenuation = 7
 		# projection is 1/cos(latitude)
 		projection = 1 / cos(-33.7 * 3.1415926 / 180.0)
+
+		while (getline < "mods") {
+			split($0, m, /:/)
+			mods[m[1]] = mods[m[1]] ":" m[2]
+			mods2[m[1],m[2]] = m[3]
+		}
+		close ("mods")
+		
 	}
 
 	$1 == "<node" && $3 ~ /lat=/ {
@@ -348,6 +356,12 @@ gawk '
 					printf "  <tag k=\"highway\" v=\"%s_name\"/>\n", hwyof[n];
 
 				printf "  <tag k=\"name\" v=\"%s\"/>\n", alias
+				if (n in mods) {
+					split(mods[n], tags, /:/)
+					for (t in tags)
+						if (t > 1)
+							printf "  <tag k=\"%s\" v=\"%s\"/>\n", tags[t], mods2[n,tags[t]]
+				}
 				printf "</way>\n"
 			}
 		}
