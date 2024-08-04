@@ -2951,6 +2951,10 @@
 					</rule>
 				</else>
 			</rule>
+-			<rule e="way" k="natural" v="water" minSize="0.008" layer="5">
+-				<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' layer="1"/>
+-				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' layer="1"/>
+-			</rule>
 		</rule>
 
 		<!-- Place names  -->
