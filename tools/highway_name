@@ -51,8 +51,7 @@ gawk '
 		r1 = w1[length(w1)-1]
 		r2 = w2[0]
 		r2a = w2[length(w2)-1]
-		if (abs(lon[r1]-lon[r2]) > 0.0006 ||
-		    abs(lat[r1]-lat[r2]) > 0.0006)
+		if (dist(r1, r2) > 1)
 			return 0
 		# order must be roughly r1a r1 r2 r2a in some direction.
 		if (((lat[r1a] <= lat[r1] && lat[r2] <= lat[r2a]) ||
