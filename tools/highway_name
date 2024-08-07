@@ -302,6 +302,8 @@ gawk '
 					}
 					if (found)
 						continue
+				}
+				if (wlen <= 0.70 * length(alias)) {
 					# Try to enlarge
 					get_vect(id, vv)
 					extend = 0
@@ -324,8 +326,10 @@ gawk '
 						wlen = wlen * target
 						print "  to", wlen > "/dev/stderr"
 					}
+				}
+				if (wlen <= 0.70 * length(alias)) {
 					split(alias, awords)
-					if (wlen > 4 && wlen < 0.7 * length(alias) && length(awords) > 1) {
+					if (wlen > 4 && length(awords) > 1) {
 						# Try to abbreviate.
 						t = awords[length(awords)]
 						l = length(alias) - length(t) + 1
