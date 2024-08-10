@@ -397,6 +397,8 @@ gawk '
 				pos = "50"
 				if (mods2[n, "start"] ~ /^[0-9]+$/)
 					pos = mods2[n, "start"]
+				if (mods2[n, id] ~ /^[0-9]+$/)
+					pos = mods2[n, id]
 
 				printf "   <tag k=\"svg:startOffset\" v=\"%d%%\"/>\n", pos
 				if (substr(hwyof[n], 1, 5) == "WATER")
