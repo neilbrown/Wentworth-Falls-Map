@@ -380,6 +380,11 @@ gawk '
 				for (i in idrefs[id]) {
 					printf "  <nd ref=\"%s\"/>\n", idrefs[id][i]
 				}
+				pos = "50"
+				if (mods2[n, "start"] ~ /^[0-9]+$/)
+					pos = mods2[n, "start"]
+
+				printf "   <tag k=\"svg:startOffset\" v=\"%d%%\"/>\n", pos
 				if (substr(hwyof[n], 1, 5) == "WATER")
 					printf "  <tag k=\"waterway\" v=\"%s_name\"/>\n", substr(hwyof[n], 6);
 				else
@@ -389,7 +394,7 @@ gawk '
 				if (n in mods) {
 					split(mods[n], tags, /:/)
 					for (t in tags)
-						if (t > 1 && mods2[n,tags[t]])
+						if (t > 1 && length(mods2[n,tags[t]]))
 							printf "  <tag k=\"%s\" v=\"%s\"/>\n", tags[t], mods2[n,tags[t]]
 				}
 				printf "</way>\n"
