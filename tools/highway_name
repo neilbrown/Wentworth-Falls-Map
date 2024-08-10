@@ -205,6 +205,28 @@ gawk '
 		idrefs[pathid][length(idrefs[pathid])-1] = p1
 	}
 
+	function do_trim(path, p,    i, l, j)
+	{
+		l = length(path)
+		for (i = 0; i < l; i++) {
+			if (path[i] == p) {
+				if (dist(path[0], p) > dist(path[l-1], p)) {
+					# remove end
+					for (i += 1; i < l ; i ++)
+						delete path[i]
+				} else {
+					# remove start
+					for (j = 0; j < l ; j++)
+						if (j < l - i)
+							path[j] = path[j+i]
+						else
+							delete path[j]
+				}
+				break;
+			}
+		}
+	}
+
 	BEGIN {
 		prio["trunk"] = 1
 		prio["secondary"] = 3
@@ -282,6 +304,10 @@ gawk '
 			join_ways(ways[n], 1)
 
 			for (id in ways[n]) {
+				split(mods[n], tags, /:/)
+				for (t in tags)
+					if (t > 1 && mods2[n,tags[t]] == "trim")
+						do_trim(idrefs[id], tags[t])
 				wlen = calc_way_len(id)
 				alias = n
 				if (wlen < length(alias))
@@ -363,7 +389,7 @@ gawk '
 				if (n in mods) {
 					split(mods[n], tags, /:/)
 					for (t in tags)
-						if (t > 1)
+						if (t > 1 && mods2[n,tags[t]])
 							printf "  <tag k=\"%s\" v=\"%s\"/>\n", tags[t], mods2[n,tags[t]]
 				}
 				printf "</way>\n"
