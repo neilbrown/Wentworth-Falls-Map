@@ -253,6 +253,13 @@ gawk '
 		
 	}
 
+	$1 == "<bounds" {
+		split($0, ll, /"/);
+		minlat = ll[2]
+		minlon = ll[4]
+		maxlat = ll[6]
+		maxlon = ll[8]
+	}
 	$1 == "<node" && $3 ~ /lat=/ {
 		split($0, ll, /"/);
 		lon[ll[2]] = ll[6];
@@ -294,7 +301,12 @@ gawk '
 	inway && wd[2] == "highway" { hwy = wd[4] }
 	inway && wd[2] == "waterway" { hwy = "WATER" wd[4] }
 
-	inway && wd[1] ~ "<nd ref=" { refs[length(refs)] = wd[2]; lastref=wd[2]; if (!firstref) firstref=wd[2]; }
+	inway && wd[1] ~ "<nd ref=" {
+		if (lon[wd[2]] < minlon || lon[wd[2]] > maxlon ||
+		    lat[wd[2]] < minlat || lat[wd[2]] > maxlat)
+			next;
+		refs[length(refs)] = wd[2]; lastref=wd[2]; if (!firstref) firstref=wd[2]; 
+	}
 
 	END {
 		for (n in ways) {
