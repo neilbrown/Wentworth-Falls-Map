@@ -284,6 +284,8 @@ gawk '
 			next;
 		if (prio[h] == 99)
 			next;
+		if (mods2[n,id] == "discard")
+			next;
 
 		for (i in refs)
 			idrefs[id][i] = refs[i];
