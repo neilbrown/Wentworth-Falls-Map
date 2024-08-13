@@ -265,12 +265,13 @@ gawk '
 		lon[ll[2]] = ll[6];
 		lat[ll[2]] = ll[4];
 	}
-	$1 == "<way" {inway = 1; delete refs; hwy="";
+	$1 == "<way" {inway = 1; delete refs; hwy=""; water="";
 		split($2, ids, /"/); id=ids[2];
 		}
 	$1 == "</way>" {
 		n = name
 		h = hwy
+		w = water
 		fr = firstref
 		lr = lastref
 
@@ -279,7 +280,7 @@ gawk '
 		hwy = "";
 		firstref = ""
 
-		if (!n || ! h || !fr)
+		if (!n || (! h && !w) || !fr)
 			#nothing here...
 			next;
 		if (prio[h] == 99)
@@ -290,18 +291,23 @@ gawk '
 		for (i in refs)
 			idrefs[id][i] = refs[i];
 
-		ways[n][id] = 1;
-
-
-		if (h in prio && n in hwyof && prio[h] > prio[hwyof[n]]) h = hwyof[n];
+		if (h && h in prio && n in hwyof && prio[h] > prio[hwyof[n]]) h = hwyof[n];
 		if (prio[h] > 5) h = "residential"
-		hwyof[n] = h
+		if (h) {
+			ways[n][id] = 1;
+			hwyof[n] = h
+		}
+		if (w) {
+			waters[n][id] = 1;
+		        waterof[n] = water
+		}
 	}
 			
 	inway { split($0, wd, /"/) }
 	inway && wd[2] == "name" { name = wd[4] }
 	inway && wd[2] == "highway" { hwy = wd[4] }
 	inway && wd[2] == "waterway" { hwy = "WATER" wd[4] }
+	inway && wd[2] == "water" { water = wd[4] }
 
 	inway && wd[1] ~ "<nd ref=" {
 		if (lon[wd[2]] < minlon || lon[wd[2]] > maxlon ||
@@ -412,6 +418,24 @@ gawk '
 					for (t in tags)
 						if (t > 1 && length(mods2[n,tags[t]]))
 							printf "  <tag k=\"%s\" v=\"%s\"/>\n", tags[t], mods2[n,tags[t]]
+				}
+				printf "</way>\n"
+			}
+		}
+		for (n in waters) {
+			for (id in waters[n]) {
+				printf "<way id=\"A%s\">\n", id;
+				for (i in idrefs[id]) {
+					printf "  <nd ref=\"%s\"/>\n", idrefs[id][i]
+				}
+				printf "  <tag k=\"water\" v=\"%s_name\"/>\n", waterof[n];
+
+				printf "  <tag k=\"name\" v=\"%s\"/>\n", n
+				c = mods2[n, "centre"]
+				if (c ~ /.*,.*/) {
+					split(c, coords, /,/)
+					printf "  <tag k=\"osmarender:areaCenterLon\" v=\"%s\"/>\n", coords[1]
+					printf "  <tag k=\"osmarender:areaCenterLat\" v=\"%s\"/>\n", coords[2]
 				}
 				printf "</way>\n"
 			}
