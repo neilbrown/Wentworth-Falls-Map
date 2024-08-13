@@ -1,4 +1,4 @@
-Water Nymphs Dell:name_direction:1
+Water Nymphs Dell:start:20
 Valley Road:name_direction:1
 Jamieson Street:250305943:trim
 St Georges Parade:6559652573:trim
@@ -9,6 +9,8 @@ Fletcher Street:start:66
 Kitchener Avenue:start:60
 Asquith Avenue:start:60
 Glenview Road:start:20
+Somme Avenue:start:30
+Duperry Street:start:40
 Great Western Highway:580512277:66
 Great Western Highway:580512278:33
 Wentworth Falls Lake:centre:150.37,-33.7042
